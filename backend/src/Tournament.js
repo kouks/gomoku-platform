@@ -18,20 +18,17 @@ export default class Tournament {
   onConnection (ws, client) {
     console.log('Client connected, port: ' + this.port)
 
-    ws.send(JSON.stringify({'type': 'hello'}))
-    ws.on('message', message => {
+    this.send(ws, {'type': 'hello'})
+
+    ws.on('message', (message) => {
       try {
         message = JSON.parse(message)
       } catch (e) {
-        ws.send(JSON.stringify({ ok: false, error: 'Invalid json.' }))
-
-        return
+        return this.send(ws, { ok: false, error: 'Invalid json.' })
       }
 
       if (this[message.type] === undefined) {
-        ws.send(JSON.stringify({ ok: false, error: 'Invalid event.' }))
-
-        return
+        return this.send(ws, { ok: false, error: 'Invalid event.' })
       }
 
       this[message.type](ws, message)
@@ -40,24 +37,18 @@ export default class Tournament {
 
   ready (ws, message) {
     if (message.name === undefined) {
-      ws.send(JSON.stringify({ ok: false, error: 'Name field missing.' }))
-
-      return
+      return this.send(ws, { ok: false, error: 'Name field missing.' })
     }
 
     if (this.players.length > 1) {
-      ws.send(JSON.stringify({ ok: false, error: 'Too many players.' }))
-
-      return
+      return this.send(ws, { ok: false, error: 'Too many players.' })
     }
 
-    ws.send(JSON.stringify({ ok: true }))
+    this.send(ws, { ok: true })
 
     if (this.games.length === this.gameCount) {
-      ws.send(JSON.stringify({ type: 'tournament_over' }))
-      this.wss.close()
-
-      return
+      this.send(ws, { type: 'tournament_over' })
+      return this.wss.close()
     }
 
     this.players.push({
@@ -75,10 +66,10 @@ export default class Tournament {
     this.players.forEach(({ ws }, key) => {
       this.players[key].side = key === this.turn ? 'x' : 'o'
 
-      ws.send(JSON.stringify({ type: 'new_game', side: this.players[key].side }))
+      this.send(ws, { type: 'new_game', side: this.players[key].side })
 
       if (key === this.turn) {
-        ws.send(JSON.stringify({ type: 'your_move', game: { id: game.id, state: game.state } }))
+        this.send(ws, { type: 'your_move', game: { id: game.id, state: game.state } })
       }
     })
   }
@@ -87,55 +78,54 @@ export default class Tournament {
     let player = this.players[this.turn]
 
     if (player === undefined || ws !== player.ws) {
-      ws.send(JSON.stringify({ ok: 'false', error: 'Not your move.' }))
-
-      return
+      return this.send(ws, { ok: 'false', error: 'Not your move.' })
     }
 
     if (message.game === undefined || message.game.id === undefined || message.game.move === undefined ||
       message.game.move.x === undefined || message.game.move.y === undefined) {
-      ws.send(JSON.stringify({
+      return this.send(ws, {
         ok: 'false',
         error: 'Invalid request, requested format: { ... game: { id: int, moves: { x: int, y: int }}}'
-      }))
-
-      return
+      })
     }
 
     let move = message.game.move
 
     if (move.x > 19 || move.x < 0 || move.y > 19 || move.y < 0) {
-      ws.send(JSON.stringify({ ok: 'false', error: 'The move [' + move.x + ', ' + move.y + '] is out of bounaries.' }))
-
-      return
+      return this.send(ws, { ok: 'false', error: 'The move [' + move.x + ', ' + move.y + '] is out of bounaries.' })
     }
 
     let game = this.games[message.game.id]
 
     if (game === undefined) {
-      ws.send(JSON.stringify({ ok: 'false', error: 'Bad game id.' }))
-
-      return
+      return this.send(ws, { ok: 'false', error: 'Bad game id.' })
     }
 
     if (!game.move(move, player.side)) {
-      ws.send(JSON.stringify({ ok: 'false', error: 'Move is invalid.' }))
-
-      return
+      return this.send(ws, { ok: 'false', error: 'Move is invalid.' })
     }
 
+    console.log(game.checkEnd(move, player.side))
     if (game.checkEnd(move, player.side)) {
-      // new game
+      return this.players.forEach(({ ws }, key) => {
+        if (key === this.turn) {
+          this.send(ws, { type: 'game_over' })
+        }
+      })
     }
 
-    ws.send(JSON.stringify({ ok: true }))
+    this.send(ws, { ok: true })
     this.turn = this.turn === 1 ? 0 : 1
 
     this.players.forEach(({ ws }, key) => {
       if (key === this.turn) {
-        ws.send(JSON.stringify({ type: 'your_move', game: { id: game.id, state: game.state } }))
+        this.send(ws, { type: 'your_move', game: { id: game.id, state: game.state } })
       }
     })
+  }
+
+  send (ws, message) {
+    return ws.send(JSON.stringify(message))
   }
 
   url () {
