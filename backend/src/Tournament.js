@@ -1,131 +1,95 @@
 import Game from './Game'
+import uuid from 'uuid/v4'
 import { Server } from 'ws'
 import config from 'config'
+import Logger from './Logger'
+import Socket from './Socket'
+import Move from '@/Handlers/Move'
+import Ready from '@/Handlers/Ready'
+import { MongoClient as Mongo } from 'mongodb'
 
 export default class Tournament {
   constructor (gameCount) {
-    this.port = Math.floor(Math.random() * 10000 + 30000)
-    this.turn = Math.round(Math.random())
-    this.id = (new Date()).getTime()
+    this.id = uuid()
+    this.port = this.generatePort()
     this.gameCount = gameCount
-    this.players = []
-    this.games = {}
+    this.spectators = {}
+    this.currentGame = new Game(this)
+
+    this.games = [this.currentGame]
 
     this.wss = new Server({ port: this.port })
     this.wss.on('connection', (ws, client) => this.onConnection(ws, client))
   }
 
-  onConnection (ws, client) {
-    console.log('Client connected, port: ' + this.port)
+  onConnection (ws) {
+    // Log that a new client has connected on a port specific to this
+    // tournament and send him the 'hello' event.
+    Logger.log('Client connected on port: ' + this.port)
+    Socket.send(ws, { type: 'hello' })
 
-    this.send(ws, {'type': 'hello'})
+    // Assign a uuid to the websocket client.
+    ws.id = uuid()
 
+    // Assign event handlers here.
     ws.on('message', (message) => {
-      try {
-        message = JSON.parse(message)
-      } catch (e) {
-        return this.send(ws, { ok: false, error: 'Invalid json.' })
+      if ((message = this.parseMessage(message)) === null) {
+        return Socket.send(ws, { ok: false, error: 'invalid_json' })
       }
 
-      if (this[message.type] === undefined) {
-        return this.send(ws, { ok: false, error: 'Invalid event.' })
-      }
-
-      this[message.type](ws, message)
-    })
-  }
-
-  ready (ws, message) {
-    if (message.name === undefined) {
-      return this.send(ws, { ok: false, error: 'Name field missing.' })
-    }
-
-    if (this.players.length > 1) {
-      return this.send(ws, { ok: false, error: 'Too many players.' })
-    }
-
-    this.send(ws, { ok: true })
-
-    if (this.games.length === this.gameCount) {
-      this.send(ws, { type: 'tournament_over' })
-      return this.wss.close()
-    }
-
-    this.players.push({
-      ws, name: message.name
-    })
-
-    if (this.players.length !== 2) {
-      return
-    }
-
-    let game = new Game(this.players)
-
-    this.games[game.id] = game
-
-    this.players.forEach(({ ws }, key) => {
-      this.players[key].side = key === this.turn ? 'x' : 'o'
-
-      this.send(ws, { type: 'new_game', side: this.players[key].side })
-
-      if (key === this.turn) {
-        this.send(ws, { type: 'your_move', game: { id: game.id, state: game.state } })
+      switch (message.type) {
+        case 'ready':
+          Ready.handle(this, ws, message)
+          break
+        case 'move':
+          Move.handle(this, ws, message)
+          break
+        default:
+          Socket.send(ws, { ok: false, error: 'invalid_event' })
       }
     })
   }
 
-  move (ws, message) {
-    let player = this.players[this.turn]
-
-    if (player === undefined || ws !== player.ws) {
-      return this.send(ws, { ok: 'false', error: 'Not your move.' })
+  parseMessage (message) {
+    try {
+      return JSON.parse(message)
+    } catch (e) {
+      return null
     }
+  }
 
-    if (message.game === undefined || message.game.id === undefined || message.game.move === undefined ||
-      message.game.move.x === undefined || message.game.move.y === undefined) {
-      return this.send(ws, {
-        ok: 'false',
-        error: 'Invalid request, requested format: { ... game: { id: int, moves: { x: int, y: int }}}'
+  write () {
+    Mongo.connect(config.mongodb, (e, db) => {
+      db.collection('tournaments').insertOne({
+        id: this.id,
+        port: this.port,
+        game_count: this.gameCount,
+        games: this.games.map((game) => {
+          let ids = Object.keys(game.players)
+
+          return {
+            id: game.id,
+            winner: game.winner,
+            state: game.state,
+            moves: game.moves,
+            players: {
+              [ids[0]]: {
+                name: game.players[ids[0]].name,
+                side: game.players[ids[0]].side
+              },
+              [ids[1]]: {
+                name: game.players[ids[1]].name,
+                side: game.players[ids[1]].side
+              }
+            }
+          }
+        })
       })
-    }
-
-    let move = message.game.move
-
-    if (move.x > 19 || move.x < 0 || move.y > 19 || move.y < 0) {
-      return this.send(ws, { ok: 'false', error: 'The move [' + move.x + ', ' + move.y + '] is out of bounaries.' })
-    }
-
-    let game = this.games[message.game.id]
-
-    if (game === undefined) {
-      return this.send(ws, { ok: 'false', error: 'Bad game id.' })
-    }
-
-    if (!game.move(move, player.side)) {
-      return this.send(ws, { ok: 'false', error: 'Move is invalid.' })
-    }
-
-    console.log(game.checkEnd(move, player.side))
-    if (game.checkEnd(move, player.side)) {
-      return this.players.forEach(({ ws }, key) => {
-        if (key === this.turn) {
-          this.send(ws, { type: 'game_over' })
-        }
-      })
-    }
-
-    this.send(ws, { ok: true })
-    this.turn = this.turn === 1 ? 0 : 1
-
-    this.players.forEach(({ ws }, key) => {
-      if (key === this.turn) {
-        this.send(ws, { type: 'your_move', game: { id: game.id, state: game.state } })
-      }
     })
   }
 
-  send (ws, message) {
-    return ws.send(JSON.stringify(message))
+  generatePort () {
+    return Math.floor(Math.random() * 10000 + 30000)
   }
 
   url () {

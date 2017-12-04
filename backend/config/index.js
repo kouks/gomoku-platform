@@ -4,5 +4,6 @@ export default {
     http: 'https://localhost',
     ws: 'ws://localhost'
   },
-  mongodb: 'mongodb://localhost:27018'
+  mongodb: 'mongodb://localhost:27018',
+  debug: true
 }

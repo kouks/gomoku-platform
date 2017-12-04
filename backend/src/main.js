@@ -1,7 +1,9 @@
 import http from 'http'
+import config from 'config'
 import express from 'express'
 import bodyParser from 'body-parser'
 import Tournament from './Tournament'
+import { MongoClient as Mongo } from 'mongodb'
 
 /*
 |
@@ -20,5 +22,13 @@ app.post('/tournaments', (req, res) => {
 
   res.send({
     url: tournament.url()
+  })
+})
+
+app.get('/tournaments', (req, res) => {
+  Mongo.connect(config.mongodb, (e, db) => {
+    db.collection('tournaments').find({}).toArray((e, result) => {
+      res.send(result)
+    })
   })
 })
