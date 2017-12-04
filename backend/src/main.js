@@ -1,3 +1,4 @@
+import cors from 'cors'
 import http from 'http'
 import config from 'config'
 import express from 'express'
@@ -12,6 +13,7 @@ import { MongoClient as Mongo } from 'mongodb'
 */
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.server = http.createServer(app)

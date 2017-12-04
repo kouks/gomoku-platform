@@ -1,3 +1,4 @@
+const Nodemon = require('nodemon-webpack-plugin')
 const nodeExternals = require('webpack-node-externals');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
@@ -8,6 +9,7 @@ function basePath (dir) {
 module.exports = {
   entry: './src/main.js',
   plugins: [
+    new Nodemon(),
     new FriendlyErrorsWebpackPlugin()
   ],
   target: 'node',

@@ -4,14 +4,15 @@
   "description": "Gomoku Platform Backend.",
   "main": "dist/build.js",
   "scripts": {
-    "watch": "cross-env NODE_ENV=development webpack-dev-server --hot --quiet",
-    "build": "cross-env NODE_ENV=production webpack --hide-modules && node ."
+    "watch": "cross-env NODE_ENV=development webpack --display=none --watch",
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "author": "Pavel Koch <kouks@koch@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
     "bufferutil": "^3.0.3",
+    "cors": "^2.8.4",
     "express": "^4.13.3",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.33",
@@ -30,6 +31,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "friendly-errors-webpack-plugin": "^1.6.1",
+    "nodemon-webpack-plugin": "^0.1.5",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1",
     "webpack-node-externals": "^1.6.0"
