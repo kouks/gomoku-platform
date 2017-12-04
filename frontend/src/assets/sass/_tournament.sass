@@ -1,0 +1,39 @@
+.tournament
+  font-family: $font-family
+  border-radius: 3px
+  border: 1px solid #eee
+  margin: 40px 0
+  padding: 0
+
+  & header
+    box-shadow: 0 6px 10px -3px #eee
+
+    & .result-board
+      overflow: auto
+      padding-bottom: 15px
+
+  & .games
+    overflow-y: hidden
+
+    & .game-canvas
+      padding: 20px
+
+    & .list
+      color: #666
+      background-color: #eee
+      overflow-y: auto
+      max-height: 400px
+
+      & div
+        height: 50px
+        line-height: 50px
+        font-size: 19px
+        cursor: pointer
+        overflow: hidden
+        border-bottom: 1px solid #ddd
+
+        &:last-child
+          border: 0
+
+        &:hover
+          color: #31708f
