@@ -64,6 +64,9 @@ export default class Tournament {
         id: this.id,
         port: this.port,
         game_count: this.gameCount,
+        players: this.currentGame.players.map((player) => {
+          return player.name
+        }),
         games: this.games.map((game) => {
           let ids = Object.keys(game.players)
 
