@@ -5,7 +5,7 @@
         <tags :tournament="tournament"></tags>
         <result-board :tournament="tournament"></result-board>
       </header>
-      <games :games="tournament.games"></games>
+      <games :games="tournament.games" :players="tournament.players"></games>
     </div>
   </div>
 </template>

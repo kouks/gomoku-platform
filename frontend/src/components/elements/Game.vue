@@ -1,63 +1,78 @@
 <template>
-  <div class="game text-center">
-    <div class="col-md-12">
-      <div class="canvas"></div>
-    </div>
-    <div class="col-md-12">
-      <div class="controls">
-        <div>
-          <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-        </div>
-        <div>
-          <i class="fa fa-play" aria-hidden="true"></i>
-        </div>
-        <div>
-          <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div>
-      </div>
+  <div>
+    <div class="canvas-row" v-for="(row, x) in game.state" :key="x">
+      <div
+        :key="y"
+        class="canvas-cell"
+        v-for="(cell, y) in row"
+        v-html="getIcon(cell)"></div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
-  props: ['game'],
+  props: ['game', 'players'],
 
   data () {
-    return { }
+    return {
+      state: []
+    }
+  },
+
+  mounted () {
+    this.state = this.game.state
+  },
+
+  methods: {
+    resetState () {
+      this.state = (new Array(20)).fill('-').map((row) => {
+        return (new Array(20)).fill('-')
+      })
+    },
+
+    getIcon (type) {
+      if (type === '-') {
+        return ''
+      }
+
+      let style = 'player1'
+
+      if (this.game.players[type] !== this.players[0]) {
+        style = 'player2'
+      }
+
+      // We don't like some people.
+      switch (type) {
+        case 'x':
+          return '<i class="fa fa-times ' + style + '" aria-hidden="true"></i>'
+
+        case 'o':
+          return '<i class="fa fa-circle-o-notch ' + style + '" aria-hidden="true"></i>'
+
+        default:
+          return ''
+      }
+    }
   }
 }
 </script>
 
 <style lang="sass">
-  $canvas-size: 320px
-  $controls-height: 40px
+  .canvas-row
+    width: 100%
+    overflow: hidden
+    height: 16px
+    box-sizing: border-box
 
-  .game
-    height: calc($canvas-size + $controls-height)
-    overflow-x: hidden
-    overflow-y: auto
+    & .canvas-cell
+      height: 16px
+      width: 16px
+      overflow: hidden
+      box-sizing: border-box
+      display: inline-block
+      border-bottom: 1px solid #f0f0f0
+      border-left: 1px solid #f0f0f0
 
-    & .canvas
-      margin: auto
-      height: $canvas-size
-      width: $canvas-size
-      background-color: #eee
-
-    & .controls
-      margin: auto
-      height: $controls-height
-      width: $canvas-size
-      display: flex
-      border: 1px solid #ddd
-      border-radius: 3px
-      border-top: 0
-
-      & div
-        flex: 1
-        line-height: $controls-height
-        cursor: pointer
-
-        &:hover
-          background-color: #eee
 </style>
