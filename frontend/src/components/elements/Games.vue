@@ -10,13 +10,13 @@
         <div>
           Game #{{ key + 1 }}
           <p>
-            <span v-bind:class="getPlayerColor(game.players['x'])">
-              {{ game.players['x'] }}
+            <span v-bind:class="getPlayerColor(getPlayer('x', game.players))">
+              {{ getPlayer('x', game.players) }}
               <i class="fa fa-times" aria-hidden="true"></i>
             </span>
-            <span v-bind:class="getPlayerColor(game.players['o'])">
+            <span v-bind:class="getPlayerColor(getPlayer('o', game.players))">
               <i class="fa fa-circle-o-notch" aria-hidden="true"></i>
-              {{ game.players['o'] }}
+              {{ getPlayer('o', game.players) }}
             </span>
           </p>
         </div>
@@ -50,6 +50,17 @@ export default {
   },
 
   methods: {
+    // ADSDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+    getPlayer (side, players) {
+      let id = Object.keys(players).find((player, key) => {
+        if (players[player].side === side) {
+          return true
+        }
+      })
+
+      return players[id].name
+    },
+
     getPlayerColor (player) {
       if (player === this.players[0]) {
         return {'player1': true}
@@ -65,7 +76,7 @@ export default {
         return {}
       }
 
-      if (winner === this.players[0]) {
+      if (game.players[winner].name === this.players[0]) {
         return {'player1-won': true}
       }
 

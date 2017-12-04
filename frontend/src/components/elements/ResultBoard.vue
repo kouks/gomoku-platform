@@ -34,7 +34,10 @@ export default {
 
       let result = this.tournament.games.reduce((acc, game) => {
         if (!game.hasOwnProperty('winner')) { return acc }
-        return (game.winner === this.tournament.players[x] ? ++acc : acc)
+
+        let name = game.players[game.winner].name
+
+        return (name === this.tournament.players[x] ? ++acc : acc)
       }, 0)
 
       this[player] = {

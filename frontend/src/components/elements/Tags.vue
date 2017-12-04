@@ -5,7 +5,7 @@
         <li v-html="finished()"></li>
         <li>
           <span class="label label-info">
-            {{ tournament.games.length }}
+            {{ tournament.game_count }}
             games
           </span>
         </li>

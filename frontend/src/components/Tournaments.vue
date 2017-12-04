@@ -30,8 +30,8 @@ export default {
 
   methods: {
     loadTournaments () {
-      axios.get('http://localhost:8080/fake.json').then((response) => {
-        this.tournaments = response.data.tournaments
+      axios.get('http://localhost:3000/tournaments').then((response) => {
+        this.tournaments = response.data
       }).catch((error) => {
         console.error(error.message)
       })
@@ -39,7 +39,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-</style>

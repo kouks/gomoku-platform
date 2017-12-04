@@ -42,12 +42,17 @@ export default {
       state: [],
       nextMove: 0,
       playInterval: null,
-      isPlaying: false
+      isPlaying: false,
+      sides: {}
     }
   },
 
   mounted () {
     // this.resetState()
+    // ASDASDASDASDASDASASDASD
+    this.sides.x = this.getPlayer('x', this.game.players)
+
+    this.sides.o = this.getPlayer('o', this.game.players)
 
     this.state = this.game.state
 
@@ -86,7 +91,7 @@ export default {
 
       let move = this.game.moves[this.nextMove]
 
-      this.move(move.player, move.x, move.y)
+      this.move(move.side, move.x, move.y)
 
       this.nextMove++
     },
@@ -122,7 +127,7 @@ export default {
 
       let style = 'player1'
 
-      if (this.game.players[type] !== this.players[0]) {
+      if (this.sides[type] !== this.players[0]) {
         style = 'player2'
       }
 
@@ -137,6 +142,16 @@ export default {
         default:
           return ''
       }
+    },
+
+    getPlayer (side, players) {
+      let id = Object.keys(players).find((player, key) => {
+        if (players[player].side === side) {
+          return true
+        }
+      })
+
+      return players[id].name
     }
   }
 }
