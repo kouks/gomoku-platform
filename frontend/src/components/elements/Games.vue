@@ -24,33 +24,21 @@
     </div>
     <div class="col-md-12 col-lg-8 text-center game-canvas">
       <div class="game text-center">
-        <div class="col-md-12">
-          <game class="canvas" :game="games[active]" :players="players"></game>
-        </div>
-        <div class="col-md-12">
-          <div class="controls">
-            <div>
-              <i class="fa fa-angle-double-left" aria-hidden="true"></i>
-            </div>
-            <div>
-              <i class="fa fa-play" aria-hidden="true"></i>
-            </div>
-            <div>
-              <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-            </div>
-          </div>
-        </div>
+        <game-canvas
+          :players="players"
+          :game="games[active]"
+        ></game-canvas>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Game from '@/components/elements/Game'
+import GameCanvas from '@/components/elements/GameCanvas'
 
 export default {
   components: {
-    Game
+    GameCanvas
   },
 
   props: ['players', 'games'],
