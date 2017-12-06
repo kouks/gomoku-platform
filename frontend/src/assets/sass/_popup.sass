@@ -1,0 +1,76 @@
+$side-panel-width: 300px
+
+.popup
+  position: fixed
+  top: 0
+  right: $side-panel-width
+  height: 100vh
+  width: calc(100% - 170px)
+  opacity: .4
+  background: linear-gradient(to left, #eee, #fff)
+  z-index: 1
+
+.add-tournament
+  z-index: 3
+  position: fixed
+  display: flex
+  justify-content: center
+  align-items: center
+  text-align: center
+  cursor: pointer
+  background-color: #31708f
+  color: white
+  border-radius: 45px
+  box-shadow: 0px 0px 13px 4px #31708f
+  bottom: 50px
+  right: 110px
+  font-size: 28px
+  width: 80px
+  height: 80px
+  transition-property: font-size, width, height, bottom, right, box-shadow
+  transition-duration: 0.3s
+
+  & i
+    flex: 1
+    align-self: center
+
+  &:hover
+    box-shadow: 0px 0px 18px 8px #31708f
+    width: 90px
+    height: 90px
+    bottom: 45px
+    right: 105px
+    font-size: 35px
+
+.side-panel
+  position: fixed
+  top: 0px
+  right: 0px
+  width: $side-panel-width
+  height: 100vh
+  background-color: #31708f
+  color: white
+  font-family: $font-family
+  font-size: 130%
+  z-index: 2
+
+.slide-enter-active, .slide-leave-active
+  transition: width .5s
+
+.slide-enter, .slide-leave-to
+  width: 0px
+
+.slide-enter-to, .slide-leave
+  width: $side-panel-width
+
+.slide-left-enter-active, .slide-left-leave-active
+  transition-property: width, right
+  transition-duration: .5s
+
+.slide-left-enter, .slide-left-leave-to
+  width: 0px
+  right: 0px
+
+.slide-left-enter-to, .slide-left-leave
+  width: calc(100% - $side-panel-width)
+  right: $side-panel-width
