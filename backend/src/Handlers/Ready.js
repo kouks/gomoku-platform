@@ -7,7 +7,7 @@ export default class Ready {
       return Socket.send(ws, { ok: false, error: 'invalid_message_format' })
     }
 
-    // If there is already 2 players in the game, refuse the player.
+    // If there are already 2 players in the game, refuse the player.
     if (!tournament.currentGame.addPlayer(ws, message.name)) {
       return Socket.send(ws, { ok: false, error: 'too_many_players' })
     }

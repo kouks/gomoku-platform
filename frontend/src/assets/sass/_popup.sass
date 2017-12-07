@@ -1,6 +1,9 @@
 $side-panel-width: 300px
 
-.popup
+/**
+ * Shade that covers the body of a page while the add tournament menu is open.
+ */
+.shade
   position: fixed
   top: 0
   right: $side-panel-width
@@ -10,6 +13,9 @@ $side-panel-width: 300px
   background: linear-gradient(to left, #eee, #fff)
   z-index: 1
 
+/**
+ * Add tournament button.
+ */
 .add-tournament
   z-index: 3
   position: fixed
@@ -42,6 +48,9 @@ $side-panel-width: 300px
     right: 105px
     font-size: 35px
 
+/**
+ * Side panel menu for adding a tournament.
+ */
 .side-panel
   position: fixed
   top: 0px
@@ -53,11 +62,93 @@ $side-panel-width: 300px
   font-family: $font-family
   font-size: 130%
   z-index: 2
+  box-shadow: -5px 0px 10px #eee
 
+  & .form-field
+    font-variant: small-caps
+
+    &.heading
+      margin-top: 15vh
+      color: black
+      background: #f6f9fa
+      text-align: center
+      font-size: 25px
+      padding: 15px 8px
+
+    & input[type="text"], button
+      padding: 15px 8px
+      color: black
+      border: none
+      width: 100%
+      background: white
+      outline: none
+      transition: .3s background ease, .3s border-left ease
+
+      &::placeholder
+        color: #bbb
+
+    & input[type="text"]:hover, input[type="text"]:focus
+        background: #fafafa
+        border-left: 3px solid #31708f
+
+    & button
+      background: #f6f9fa
+      margin-bottom: 40px
+      transition: .2s letter-spacing ease
+
+      &:hover, &:focus
+        letter-spacing: 1px
+
+  & .faq
+    padding: 10px 0
+    margin: 5px 0
+
+    & a
+      text-decoration: none
+      color: inherit
+      width: 100%
+      display: block
+      transition-property: background, color, padding
+      transition-duration: .2s
+
+      & p
+        display: none
+        padding: 8px 20px 0px 80px
+        font-weight: 100
+        font-size: 14px
+        text-align: justify
+
+      &:hover
+        background: #f6f9fa
+        color: black
+        padding: 10px 0 15px 0
+
+        & p
+          display: block
+
+    & i
+      padding-left: 80px
+      padding-right: 15px
+
+    &:last-child i
+      padding-left: 85px
+      padding-right: 18px
+
+  & .copy
+    position: absolute
+    margin-top: 50px
+    font-size: 12px
+    text-align: center
+    bottom: 10px
+
+/**
+ * Vue.js Transitions.
+ */
 .slide-enter-active, .slide-leave-active
   transition: width .5s
 
 .slide-enter, .slide-leave-to
+  transition-delay: .2s
   width: 0px
 
 .slide-enter-to, .slide-leave
@@ -74,3 +165,14 @@ $side-panel-width: 300px
 .slide-left-enter-to, .slide-left-leave
   width: calc(100% - $side-panel-width)
   right: $side-panel-width
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity .3s
+  transition-delay: .3s
+
+.fade-enter, .fade-leave-to
+  opacity: 0
+  transition-delay: .0s
+
+.fade-enter-to, .fade-leave
+  opacity: 1
