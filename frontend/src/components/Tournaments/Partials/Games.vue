@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import GameCanvas from '@/components/elements/GameCanvas'
+import GameCanvas from './GameCanvas'
 
 export default {
   components: {

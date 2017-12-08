@@ -12,9 +12,9 @@
 
 <script>
 
-import Tags from '@/components/elements/Tags'
-import Games from '@/components/elements/Games'
-import ResultBoard from '@/components/elements/ResultBoard'
+import Tags from '@/components/Tournaments/Partials/Tags'
+import Games from '@/components/Tournaments/Partials/Games'
+import ResultBoard from '@/components/Tournaments/Partials/ResultBoard'
 
 export default {
   props: ['tournament'],

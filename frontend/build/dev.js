@@ -22,6 +22,7 @@ const server = new Server(compiler, {
   publicPath: '/dist/',
   filename: 'build.js',
   hot: true,
+  historyApiFallback: true,
   stats: { colors: true, cache: true },
   quiet: true
 })

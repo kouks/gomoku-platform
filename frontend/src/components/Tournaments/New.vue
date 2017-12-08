@@ -63,13 +63,13 @@
                 </a>
               </div>
               <div class="col-md-12 faq">
-                <a href="/doc">
+                <router-link to="/docs">
                   <i class="fa fa-book"></i>
                   Documentation
                   <p>
                     Learn more about message standards, events and scenarios.
                   </p>
-                </a>
+                </router-link>
               </div>
               <div class="col-md-12 faq">
                 <a href="https://github.com/kouks/gomoku-platform" target="_blank">

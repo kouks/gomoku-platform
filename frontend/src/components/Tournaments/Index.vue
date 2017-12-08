@@ -1,21 +1,28 @@
 <template>
   <div>
-    <tournament
-      :key="key"
-      :tournament="tournament"
-      v-for="(tournament, key) in tournaments"
-    ></tournament>
+    <div class="container-fluid tournaments">
+      <div class="row">
+        <tournament
+          :key="key"
+          :tournament="tournament"
+          v-for="(tournament, key) in tournaments"
+        ></tournament>
+      </div>
+    </div>
+
+    <new-tournament></new-tournament>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-
-import Tournament from '@/components/Tournament'
+import NewTournament from './New'
+import Tournament from './Tournament'
 
 export default {
   components: {
-    Tournament
+    Tournament,
+    NewTournament
   },
 
   data () {
