@@ -50,7 +50,7 @@ export default class Move {
     // Inform the other client about that it is their turn.
     Object.values(game.players).forEach((player) => {
       if (game.isTurning(player)) {
-        Socket.send(player.ws, { type: 'your_move', game: { id: game.id, state: game.state } })
+        Socket.send(player.ws, { type: 'your_move', state: game.state, moves: game.moves })
       }
     })
   }

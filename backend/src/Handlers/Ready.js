@@ -31,7 +31,7 @@ export default class Ready {
       Socket.send(player.ws, { type: 'new_game', side: player.side })
 
       if (game.isTurning(player)) {
-        Socket.send(player.ws, { type: 'your_move', game: { id: game.id, state: game.state } })
+        Socket.send(player.ws, { type: 'your_move', state: game.state, moves: [] })
       }
     })
   }
