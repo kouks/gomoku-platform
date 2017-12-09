@@ -56,21 +56,24 @@ export default class Move {
   }
 
   static endGame (tournament, game, winner) {
+    let gamesCount = tournament.games.length
+
     Object.values(game.players).forEach(({ ws }, key) => {
-      if (tournament.games.length >= tournament.gameCount) {
+      if (gamesCount >= tournament.gameCount) {
         Socket.send(ws, { type: 'tournament_over' })
       } else {
         Socket.send(ws, { type: 'game_over' })
-        tournament.currentGame = new Game()
-        tournament.games.push(tournament.currentGame)
       }
     })
 
     game.winner = game.turn
 
-    if (tournament.games.length >= tournament.gameCount) {
+    if (gamesCount >= tournament.gameCount) {
       tournament.write()
       tournament.wss.close()
+    } else {
+      tournament.currentGame = new Game(tournament)
+      tournament.games.push(tournament.currentGame)
     }
   }
 
