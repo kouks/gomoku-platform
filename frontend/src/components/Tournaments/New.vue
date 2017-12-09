@@ -31,12 +31,6 @@
                   <div class="form-field">
                     <input v-model="games" type="text" placeholder="number of games">
                   </div>
-                  <div class="form-field">
-                    <input v-model="player1" type="text" placeholder="player #1">
-                  </div>
-                  <div class="form-field">
-                    <input v-model="player2" type="text" placeholder="player #2">
-                  </div>
                 </div>
               </transition>
 
@@ -53,7 +47,7 @@
                 </a>
               </div>
               <div class="col-md-12 faq">
-                <a href="/client">
+                <a href="/get-started">
                   <i class="fa fa-plug"></i>
                   Get started
                   <p>
@@ -99,8 +93,6 @@ export default {
     return {
       show: false,
       games: '',
-      player1: '',
-      player2: '',
       url: false
     }
   },
