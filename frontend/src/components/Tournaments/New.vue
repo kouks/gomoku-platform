@@ -40,7 +40,7 @@
               </div>
 
               <div class="col-md-12 faq">
-                <a href="/client">
+                <a href="#" @click="openClient">
                   <i class="fa fa-gamepad"></i>
                   Client
                   <p>Test your bot with our online client!</p>
@@ -122,6 +122,14 @@ export default {
       document.getElementById('copy-ws').select()
 
       document.execCommand('copy')
+    },
+
+    openClient () {
+      window.open(
+        'http://localhost:8080/client',
+        '_blank',
+        'width=600, height=600'
+      )
     }
   }
 }

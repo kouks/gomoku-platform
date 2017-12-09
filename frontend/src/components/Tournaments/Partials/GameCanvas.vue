@@ -6,8 +6,9 @@
           <div
             :key="y"
             class="canvas-cell"
-            v-for="(cell, y) in row"
-            v-html="getIcon(cell)"></div>
+            v-for="(cell, y) in row">
+              <i class="fa" v-bind:class="getIcon(cell)" aria-hidden="true"></i>
+            </div>
         </div>
       </div>
     </div>
@@ -125,23 +126,19 @@ export default {
         return ''
       }
 
-      let style = 'player1'
+      let style = {'player1': true}
 
       if (this.sides[type] !== this.players[0]) {
-        style = 'player2'
+        style = {'player2': true}
       }
 
-      // We don't like some people.
-      switch (type) {
-        case 'x':
-          return '<i class="fa fa-times ' + style + '" aria-hidden="true"></i>'
-
-        case 'o':
-          return '<i class="fa fa-circle-o-notch ' + style + '" aria-hidden="true"></i>'
-
-        default:
-          return ''
+      if (type === 'x') {
+        style['fa-times'] = true
+      } else {
+        style['fa-circle-o-notch'] = true
       }
+
+      return style
     },
 
     getPlayer (side, players) {

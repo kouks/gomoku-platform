@@ -62,7 +62,7 @@
         <p>The client is now requested to send a <code>move</code> event containing data about a move played</p>
         <pre>{
   "type": "move",
-  "move: {
+  "move": {
     "x": 1,
     "y": 2
   }
