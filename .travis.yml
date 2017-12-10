@@ -6,6 +6,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_157b94523164_key -iv $encrypted_157b94523164_iv
   -in deploy_rsa.enc -out deploy_rsa -d
 - chmod 700 deploy_rsa
+- cp .env.prod .env
 
 install:
 - travis_retry npm install
