@@ -1,1 +1,2 @@
-# Gomoku Platform
+# Gomoku Platform Backend
+> Pavel Koch
