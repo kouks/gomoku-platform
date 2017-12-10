@@ -33,7 +33,7 @@ app.post('/tournaments', (req, res) => {
 app.get('/tournaments', (req, res) => {
   Mongo.connect(config.mongodb, (e, db) => {
     db.collection('tournaments').find({}).toArray((e, result) => {
-      res.send(result)
+      res.send(result.reverse())
     })
   })
 })
