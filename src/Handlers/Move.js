@@ -70,7 +70,6 @@ export default class Move {
 
     if (gamesCount >= tournament.gameCount) {
       tournament.write()
-      tournament.wss.close()
     } else {
       tournament.currentGame = new Game(tournament)
       tournament.games.push(tournament.currentGame)

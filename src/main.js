@@ -1,6 +1,8 @@
 import cors from 'cors'
 import http from 'http'
+import uuid from 'uuid/v4'
 import config from 'config'
+import { Server } from 'ws'
 import express from 'express'
 import bodyParser from 'body-parser'
 import Tournament from './Tournament'
@@ -20,10 +22,11 @@ app.server = http.createServer(app)
 app.server.listen(3000, config.url)
 
 app.post('/tournaments', (req, res) => {
-  const tournament = new Tournament(req.body.game_count)
+  let id = uuid()
+  tournaments[`/${id}`] = new Tournament(req.body.game_count)
 
   res.send({
-    url: tournament.url()
+    url: `ws://ws-${config.url}/${id}`
   })
 })
 
@@ -32,5 +35,23 @@ app.get('/tournaments', (req, res) => {
     db.collection('tournaments').find({}).toArray((e, result) => {
       res.send(result)
     })
+  })
+})
+
+const server = http.createServer(express())
+const wss = new Server({ server })
+server.listen(4000, config.url)
+
+const tournaments = {}
+
+wss.on('connection', (ws, req) => {
+  if (tournaments[req.url] === undefined) {
+    return
+  }
+
+  tournaments[req.url].onConnection(ws, req)
+
+  ws.on('message', (message) => {
+    tournaments[req.url].onMessage(ws, message)
   })
 })
