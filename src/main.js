@@ -17,7 +17,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.server = http.createServer(app)
-app.server.listen(3000)
+app.server.listen(3000, config.url)
 
 app.post('/tournaments', (req, res) => {
   const tournament = new Tournament(req.body.game_count)

@@ -1,9 +1,7 @@
+require('dotenv').config()
 
 export default {
-  url: {
-    http: 'https://localhost',
-    ws: 'ws://localhost'
-  },
-  mongodb: 'mongodb://localhost:27018',
+  url: process.env.APP_URL,
+  mongodb: process.env.MONGO_URL,
   debug: true
 }

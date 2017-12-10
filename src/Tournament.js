@@ -96,6 +96,6 @@ export default class Tournament {
   }
 
   url () {
-    return `${config.url.ws}:${this.port}`
+    return `ws://${config.url}:${this.port}`
   }
 }
