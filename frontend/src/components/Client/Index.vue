@@ -21,7 +21,7 @@
 
         <div v-if="socket" class="text-center">
           <p v-if="your_move">Your move</p>
-          <p v-else>Waiting for opponents move ...</p>
+          <p v-else>Waiting for opponent ...</p>
 
           <div class="canvas">
             <div class="canvas-row" v-for="(row, x) in state" :key="x">

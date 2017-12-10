@@ -49,15 +49,7 @@ export default {
   },
 
   mounted () {
-    // this.resetState()
-    // ASDASDASDASDASDASASDASD
-    this.sides.x = this.getPlayer('x', this.game.players)
-
-    this.sides.o = this.getPlayer('o', this.game.players)
-
-    this.state = this.game.state
-
-    this.nextMove = this.game.moves.length
+    this.reset()
   },
 
   watch: {
@@ -69,10 +61,22 @@ export default {
       }
 
       clearInterval(this.playInterval)
+    },
+
+    game () {
+      this.reset()
     }
   },
 
   methods: {
+    reset () {
+      this.state = this.game.state
+      this.nextMove = this.game.moves.length
+      this.isPlaying = false
+      this.sides.x = this.getPlayer('x', this.game.players)
+      this.sides.o = this.getPlayer('o', this.game.players)
+    },
+
     makeMove () {
       if (this.nextMove === this.game.moves.length) {
         if (this.game.hasOwnProperty('winner')) {
@@ -113,12 +117,6 @@ export default {
       this.state[x][y] = player
 
       this.$forceUpdate()
-    },
-
-    resetState () {
-      this.state = (new Array(20)).fill('-').map((row) => {
-        return (new Array(20)).fill('-')
-      })
     },
 
     getIcon (type) {

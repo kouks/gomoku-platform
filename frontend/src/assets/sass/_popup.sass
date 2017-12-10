@@ -1,19 +1,6 @@
 $side-panel-width: 300px
 
 /**
- * Shade that covers the body of a page while the add tournament menu is open.
- */
-.shade
-  position: fixed
-  top: 0
-  right: $side-panel-width
-  height: 100vh
-  width: calc(100% - 170px)
-  opacity: .4
-  background: linear-gradient(to left, #eee, #fff)
-  z-index: 1
-
-/**
  * Add tournament button.
  */
 .add-tournament
@@ -153,18 +140,6 @@ $side-panel-width: 300px
 
 .slide-enter-to, .slide-leave
   width: $side-panel-width
-
-.slide-left-enter-active, .slide-left-leave-active
-  transition-property: width, right
-  transition-duration: .5s
-
-.slide-left-enter, .slide-left-leave-to
-  width: 0px
-  right: 0px
-
-.slide-left-enter-to, .slide-left-leave
-  width: calc(100% - $side-panel-width)
-  right: $side-panel-width
 
 .fade-enter-active, .fade-leave-active
   transition: opacity .3s
