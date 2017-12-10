@@ -110,6 +110,7 @@
         Please keep this in mind whilst designing your bots.
       </p>
       </div>
+      <br> <br> <br> <br> <br>
     </div>
   </div>
 </template>
